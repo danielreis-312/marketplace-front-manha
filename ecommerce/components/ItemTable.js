@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -28,12 +29,29 @@ export default function ItemTable(props) {
           {props.data.map((e) => (
             <tr key={e.id}>
               {Object.keys(e).map((i) =>
-                i !== "id" ? <td key={i}>{e[i]} </td> : ""
+                i !== "id" ? (
+                  <td key={i}>
+                    {i !== "image" ? (
+                      e[i]
+                    ) : (
+                      <Image src={e[i]} height={40} width={40} />
+                    )}
+                  </td>
+                ) : (
+                  ""
+                )
               )}
               <td>
-                <Icon.PenFill color="green" />
+
+                {props.editLink ? (
+                  <Link href={`/${props.detailLink}/${e.id}`}>
+                    <Icon.PenFill color="green" />
+                  </Link>
+                ) : (
+                  ""
+                )}
                 {props.detailLink ? (
-                  <Link href={`/categorias/${e.id}`}>
+                  <Link href={`/${props.detailLink}/${e.id}`}>
                     <Icon.EyeFill />
                   </Link>
                 ) : (

@@ -12,34 +12,24 @@ import {
 } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import ItemTable from "../../components/ItemTable";
-import productService from "../../service/product.service";
+import productService from "../../services/product.service";
+import useAuth from "../../hooks/useAuth";
 
 export default function Produtos() {
-  useEffect(() => {
-    productService.getProducts().then((d) => {
-      useData(d);
-    });
-  });
-  const [data, useData] = useState([]);
+  useAuth();
+  
+  const [data, setData] = useState([]);
 
-  for (let i = 0; i < 10; i++) {
-    const hoje = new Date();
-    data.push({
-      image: "image",
-      name: `nome ${i}`,
-      categoria: `categoria ${i}`,
-      price: `R$ ${i},99`,
-      createAt: hoje.toLocaleDateString(),
-      id: i,
-    });
-  }
+  useEffect(() => {
+    productService.getProducts().then((r) => setData(r));
+  }, []);
 
   const headers = ["FOTO", "NOME", "CATEGORIA", "PREÇO", "CRIADO EM", "AÇÕES"];
 
   return (
     <>
       <Card className="m-md-5 p-md-2">
-        <h2 className="text-center">Categorias</h2>
+        <h2 className="text-center">Produtos</h2>
         <Row className="pt-2">
           <Col md={10}>
             <InputGroup>
@@ -55,7 +45,7 @@ export default function Produtos() {
             </Link>
           </Col>
         </Row>
-        <ItemTable data={data} headers={headers} detailLink="produtos" />
+        <ItemTable data={data} headers={headers} detailLink="produtos" editLink="produtos/editar" />
       </Card>
     </>
   );

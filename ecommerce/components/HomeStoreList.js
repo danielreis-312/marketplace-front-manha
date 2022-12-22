@@ -26,5 +26,70 @@ export default function HomeStoreList() {
     Loja9,
   ];
 
-  return <>HomeStoreList</>;
+  for (let i = 0; i < lojasImg.length; i++) {
+    lojas.push({
+      id: i,
+      name: `Minha Super Loja ${i}`,
+      img: lojasImg[i],
+    });
+  }
+  const [storesToShow, setStoresToShow] = useState([
+    lojas[0],
+    lojas[1],
+    lojas[2],
+  ]);
+  const [disableRight, setDisableRight] = useState(false);
+  const [disableLeft, setDisableLeft] = useState(true);
+
+  function goRight() {
+    const index = lojas.findIndex((e) => e.id === storesToShow[2].id);
+    if (lojas.length - 1 !== index) {
+      storesToShow.shift();
+      storesToShow.push(lojas[index + 1]);
+      setDisableLeft(false);
+      setDisableRight(false);
+    }
+    setStoresToShow([...storesToShow]);
+    if (lojas[lojas.length - 1].id === storesToShow[2].id) {
+      setDisableRight(true);
+    }
+  }
+
+  function goLeft() {
+    const index = lojas.findIndex((e) => e.id === storesToShow[0].id);
+    if (index !== 0) {
+      storesToShow.pop();
+      storesToShow.unshift(lojas[index - 1]);
+      setDisableLeft(false);
+      setDisableRight(false);
+    }
+    setStoresToShow([...storesToShow]);
+    if (lojas[0].id === storesToShow[0].id) {
+      setDisableLeft(true);
+    }
+  }
+
+  return (
+    <>
+      <Row className="text-center align-items-center">
+        <Col>
+          <Icon.ArrowLeftCircleFill
+            color={disableLeft ? "gray" : "black"}
+            onClick={goLeft}
+            size={96}
+          />
+        </Col>
+        {storesToShow.map((e) => (
+          <HomeStoreCard key={e.id} img={e.img} name={e.name} />
+        ))}
+        <Col>
+          <Icon.ArrowRightCircleFill
+            size={96}
+            onClick={goRight}
+            color={disableRight ? "gray" : "black"}
+          />
+        </Col>
+      </Row>
+    </>
+  );
 }

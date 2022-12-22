@@ -3,33 +3,44 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Col, Container, Form, Row, Card, Button } from "react-bootstrap";
-import ProductImg from "../../public/imgs/produto.jpg";
-import categoryService from "../../services/category.service";
-import productService from "../../services/product.service";
+import ProductImg from "../../../public/imgs/produto.jpg";
+import categoryService from "../../../services/category.service";
+import productService from "../../../services/product.service";
 
-export default function CadastrarProduto() {
+export default function EditarProduto() {
   const [categoryList, setCategoryList] = useState([]);
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const router = useRouter();
+  const { id } = router.query;
 
   useEffect(() => {
     categoryService.getCategories().then((r) => setCategoryList(r));
-  }, []);
+    if (id) {
+      productService.getProduct(id).then((r) => {
+        setName(r.name);
+        setPrice(r.price);
+        setCategory(r.category);
+      });
+    }
+  }, [id]);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const produto = await productService.createProduct({
-      name,
-      price,
-      category,
-    });
+    const produto = await productService.updateProduct(
+      {
+        name,
+        price,
+        category,
+      },
+      id
+    );
     if (produto.id) {
-      alert("Produto criado com sucesso");
+      alert("Produto editado com sucesso");
       router.push("/produtos");
     } else {
-      alert("Falha ao criar produto, tente novamente");
+      alert("Falha ao editar produto, tente novamente");
     }
   }
 
@@ -37,7 +48,7 @@ export default function CadastrarProduto() {
     <Container className="p-2">
       <Card className="p-2">
         <Form onSubmit={handleSubmit}>
-          <h2>Cadastrar Produto</h2>
+          <h2>Editar Produto</h2>
           <Form.Group className="p-2">
             <Form.Label>Nome</Form.Label>
             <Form.Control
@@ -73,7 +84,7 @@ export default function CadastrarProduto() {
             </Form.Select>
           </Form.Group>
           <Form.Group className="p-2 text-center">
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">Editar</Button>
           </Form.Group>
         </Form>
       </Card>

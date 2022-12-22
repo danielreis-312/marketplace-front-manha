@@ -13,11 +13,11 @@ import {
 import * as Icon from "react-bootstrap-icons";
 import ItemTable from "../../components/ItemTable";
 
-export default function Produtos() {
+export default function Vendas() {
   const data = [];
 
   for (let i = 0; i < 10; i++) {
-    const hoje = new Date();
+    const hoje = new Date()
     data.push({
       order: `#${i}`,
       client: `Cliente ${i}`,
@@ -27,12 +27,13 @@ export default function Produtos() {
     });
   }
 
-  const headers = ["PEDIDO", "CLIENTE", "PREÇO", "CRIADO EM", "AÇÕES"];
+  const headers = ["PEDIDO", "CLIENTE", "TOTAL",
+                   "CRIADO EM", "AÇÕES"];
 
   return (
     <>
       <Card className="m-md-5 p-md-2">
-        <h2 className="text-center">Categorias</h2>
+        <h2 className="text-center">Vendas</h2>
         <Row className="pt-2">
           <Col md={12}>
             <InputGroup>
@@ -43,7 +44,7 @@ export default function Produtos() {
             </InputGroup>
           </Col>
         </Row>
-        <ItemTable data={data} headers={headers} detailLink="vendas" />
+        <ItemTable data={data} headers={headers} detailLink="vendas"/>
       </Card>
     </>
   );
